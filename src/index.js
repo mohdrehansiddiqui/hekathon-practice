@@ -1,5 +1,9 @@
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"; 
-  import { getDatabase, ref, set  } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js"; 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"; 
+  // const { initializeApp } = require("firebase/app");
+  // import { getFirestore, collection, addDoc, getDocs, setDoc, doc, query, where} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-getFirestore.js";
+  import { getFirestore, doc, getDoc, setDoc, collection, addDoc, updateDoc, deleteDoc, deleteField} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+  // import { getFirestore } from "firebase/firestore";
+  // const {getFirestore} = require('firebase/firestore');
   
   const firebaseConfig = {
     apiKey: "AIzaSyAgi2ZN1VSMNXIAvVzkWNt0rTeXgaqsq1U",
@@ -14,28 +18,35 @@
 
   // Initialize Firebase
   const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  
+  const db = getFirestore();
+  // const db2 = firebase.getFirestore(app)
 
 let savePost = document.getElementById('savePostBtn')
+let postImage = document.getElementById('postImage')
+let imageAlt = document.getElementById('imageAlt')
+let postTitle = document.getElementById('postTitle')
+let descriptionPost = document.getElementById('descriptionPost')
 
-savePost.addEventListener('click',(e)=>{
-    console.log("Function woring")
-    let posttitle = document.getElementById("postTitle").value;
-    let descriptionPost = document.getElementById("descriptionPost").value;
-    let imageAlt = document.getElementById("imageAlt").value;
-    set(ref(db, "posts/" + posttitle), {
-      title:posttitle,
-      description: descriptionPost,
-      imageAlt: imageAlt,
-    }).then(function(success){
-        console.log("sucess");
-        console.log(success)
-    }).catch(function(error){
-        console.log("error");
-        console.log(error)
+
+savePost.addEventListener('click', async()=>{
+
+  var ref = collection(db, "StudentsList");
+
+  await addDoc(ref, {
+    postTitle: postTitle.value,
+    descriptionPost: descriptionPost.value,
+    postImage: postImage.value,
+    imageAlt: imageAlt.value,
+  })
+    .then(() => {
+      alert("data added succesfully");
+    })
+    .catch((error) => {
+      alert("Error in saving data");
+      console.log(error);
     });
 })
+  
 // let postImage = document.getElementById('postImage').value
 
 
@@ -89,6 +100,5 @@ savePost.addEventListener('click',(e)=>{
 // uploadString(storageRef, message4, 'data_url').then((snapshot) => {
 //   console.log('Uploaded a data_url string!');
 // });
-
 // uploadBytes()
 // uploadString()
